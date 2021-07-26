@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.muizz.spring.jooq.utils</groupId>
+  <artifactId>spring-jooq-utils</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>spring-jooq-utils</name>
+  <url>https://github/MuizMahdi/spring-jooq-utils.com</url>
+  <packaging>jar</packaging>  
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+		<org.projectlombok.version>1.18.16</org.projectlombok.version>
+    <spring.boot.version>2.5.2</spring.boot.version>
+		<jooq.version>3.15.1</jooq.version>
+  </properties>
+
+
+  <dependencies>
+
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+      <version>${spring.boot.version}</version>
+		</dependency>
+
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-r2dbc</artifactId>
+      <version>${spring.boot.version}</version>
+		</dependency>
+
+    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+      <version>${spring.boot.version}</version>
+		</dependency>
+
+    <dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${org.projectlombok.version}</version>
+		</dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+
+  <distributionManagement>
+    <repository>
+        <id>trendyol-maven-release</id>
+        <name>Trendyol release</name>
+        <url>some-url</url>
+    </repository>
+  </distributionManagement>
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+
+</project>
