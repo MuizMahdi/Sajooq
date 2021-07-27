@@ -15,22 +15,27 @@ public class YamlPropertySourceFactory implements PropertySourceFactory {
     
     @Override
     public PropertySource<?> createPropertySource(String name, EncodedResource encodedResource) {
-        String activeProfile = Optional.ofNullable(System.getenv("SPRING_PROFILES_ACTIVE"))
-                .orElse(System.getProperty("spring.profiles.active"));
 
-        log.info("MarvelousApiClient active profile: " + activeProfile);
+        String activeProfile = Optional
+        .ofNullable(System.getenv("SPRING_PROFILES_ACTIVE"))
+        .orElse(System.getProperty("spring.profiles.active"));
+
         assert activeProfile != null;
 
         YamlPropertiesFactoryBean yamlFactory = new YamlPropertiesFactoryBean();
-        yamlFactory.setDocumentMatchers(properties -> {
-            String profileProperty = properties.getProperty("spring.profiles");
 
-            if (StringUtils.isEmpty(profileProperty)) {
-                return ABSTAIN;
-            }
+        // yamlFactory.setDocumentMatchers(properties -> {
 
-            return profileProperty.contains(activeProfile) ? FOUND : NOT_FOUND;
-        });
+        //     String profileProperty = properties.getProperty("spring.profiles");
+
+        //     if (StringUtils.isEmpty(profileProperty)) {
+        //         return ABSTAIN;
+        //     }
+
+        //     return profileProperty.contains(activeProfile) ? FOUND : NOT_FOUND;
+
+        // });
+
         yamlFactory.setResources(encodedResource.getResource());
 
         Properties properties = yamlFactory.getObject();
