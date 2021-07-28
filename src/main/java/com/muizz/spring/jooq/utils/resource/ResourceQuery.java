@@ -6,13 +6,7 @@ import java.util.Optional;
 import org.jooq.Condition;
 import org.jooq.SortField;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ResourceQuery {
 
     private ResourcePage page;
@@ -32,6 +26,30 @@ public class ResourceQuery {
 
     public Optional<List<Condition>> getFiltersOptional() {
         return Optional.ofNullable(filters);
+    }
+
+    public void setPage(ResourcePage page) {
+        this.page = page;
+    }
+
+    public ResourcePage getPage() {
+        return page;
+    }
+
+    public void setSortFields(List<SortField<?>> sortFields) {
+        this.sortFields = sortFields;
+    }
+
+    public List<SortField<?>> getSortFields() {
+        return sortFields;
+    }
+
+    public void setFilters(List<Condition> filters) {
+        this.filters = filters;
+    }
+
+    public List<Condition> getFilters() {
+        return filters;
     }
 
 }
