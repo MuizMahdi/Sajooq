@@ -9,7 +9,7 @@
    <name>${project.groupId}:${project.artifactId}</name>
    <description>A set of utilities for simplifying development using Spring Webflux and JOOQ</description>
    <version>1.0.1</version>
-   <url>https://github/MuizMahdi/spring-jooq-utils.com</url>
+   <url>https://github.com/MuizMahdi/spring-jooq-utils</url>
    <packaging>jar</packaging>
 
 
