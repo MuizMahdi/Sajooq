@@ -45,6 +45,11 @@
       <maven.compiler.target>11</maven.compiler.target>
       <spring.boot.version>2.5.2</spring.boot.version>
       <jooq.version>3.15.1</jooq.version>
+      <liquibase.version>4.4.2</liquibase.version>
+      <liquibaseMaven.version>4.1.1</liquibaseMaven.version>
+      <app.db>${DB_NAME}</app.db>
+		<app.dbuser>${DB_USER}</app.dbuser>
+		<app.dbpassword>${DB_PASSWORD}</app.dbpassword>
    </properties>
 
 
@@ -67,6 +72,24 @@
          <artifactId>spring-boot-starter-jooq</artifactId>
          <version>${spring.boot.version}</version>
       </dependency>
+
+      <dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-meta-extensions-liquibase</artifactId>
+			<version>${jooq.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+         <version>${liquibase.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-maven-plugin</artifactId>
+			<version>${liquibase.version}</version>
+		</dependency>
 
       <dependency>
          <groupId>junit</groupId>
@@ -92,6 +115,106 @@
 
    <build>
       <plugins>
+
+         <!-- #region Development -->
+
+         <plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>${jooq.version}</version>
+				<executions>
+					<execution>
+
+						<id>generate-postgre</id>
+						<phase>generate-sources</phase>
+
+						<goals>
+							<goal>generate</goal>
+						</goals>
+
+						<configuration>
+
+							<jdbc>
+								<driver>org.postgresql.Driver</driver>
+								<url>jdbc:postgresql://localhost:5432/${app.db}</url>
+								<user>${app.dbuser}</user>
+								<password>${app.dbpassword}</password>
+							</jdbc>
+
+							<generator>
+
+								<name>org.jooq.codegen.JavaGenerator</name>
+
+								<database>
+									<name>org.jooq.meta.postgres.PostgresDatabase</name>
+									<inputSchema>public</inputSchema>
+									<includes>.*</includes>
+									<excludes>
+										  databasechangelog
+										| databasechangeloglock
+									</excludes>
+									<properties>
+
+										<property>
+											<key>scripts</key>
+											<value>src/main/resources/db/db.changelog-master.yml</value>
+										</property>
+
+										<property>
+											<key>changeLogParameters.contexts</key>
+											<value>!test</value>
+										</property>
+
+									</properties>
+								</database>
+
+								<target>
+									<packageName>ehroute.identityservice.entities.db</packageName>
+									<directory>src/main/java</directory>
+								</target>
+
+								<generate>
+									<deprecated>false</deprecated>
+									<pojos>false</pojos>
+									<daos>false</daos>
+									<pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+									<javaTimeTypes>true</javaTimeTypes>
+									<fluentSetters>true</fluentSetters>
+								</generate>
+
+							</generator>
+
+						</configuration>
+
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>4.1.1</version>
+				<configuration>
+					<propertyFile>src/main/resources/liquibase.yml</propertyFile>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-core</artifactId>
+						<version>5.4.6.Final</version>
+					</dependency>
+					<dependency>
+						<groupId>javax.xml.bind</groupId>
+						<artifactId>jaxb-api</artifactId>
+						<version>2.4.0-b180830.0359</version>
+					</dependency>
+              </dependencies>
+			</plugin>
+
+         <!-- #endregion -->
+
+
+         <!-- #region Publish -->
 
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -151,6 +274,8 @@
                <autoReleaseAfterClose>true</autoReleaseAfterClose>
             </configuration>
          </plugin>
+         
+         <!-- #endregion -->
 
       </plugins>
    </build>
