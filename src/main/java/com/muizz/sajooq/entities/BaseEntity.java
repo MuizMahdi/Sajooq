@@ -1,4 +1,4 @@
-package com.muizz.spring.jooq.utils.entities;
+package com.muizz.sajooq.entities;
 
 import java.time.OffsetDateTime;
 

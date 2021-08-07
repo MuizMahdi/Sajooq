@@ -1,11 +1,11 @@
-package com.muizz.spring.jooq.utils.repository;
+package com.muizz.sajooq.repository;
 
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.UpdatableRecord;
 
-import com.muizz.spring.jooq.utils.entities.BaseEntity;
-import com.muizz.spring.jooq.utils.resource.ResourceQuery;
+import com.muizz.sajooq.entities.BaseEntity;
+import com.muizz.sajooq.resource.ResourceQuery;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -1,4 +1,4 @@
-package com.muizz.spring.jooq.utils.resource;
+package com.muizz.sajooq.resource;
 
 public class ResourceSort {
 

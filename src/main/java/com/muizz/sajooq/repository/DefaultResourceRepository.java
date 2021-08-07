@@ -1,4 +1,4 @@
-package com.muizz.spring.jooq.utils.repository;
+package com.muizz.sajooq.repository;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -13,10 +13,10 @@ import org.jooq.impl.UpdatableRecordImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.muizz.spring.jooq.utils.entities.BaseEntity;
-import com.muizz.spring.jooq.utils.exceptions.InvalidOperationException;
-import com.muizz.spring.jooq.utils.exceptions.TableFieldNotFoundException;
-import com.muizz.spring.jooq.utils.resource.ResourceQuery;
+import com.muizz.sajooq.entities.BaseEntity;
+import com.muizz.sajooq.exceptions.InvalidOperationException;
+import com.muizz.sajooq.exceptions.TableFieldNotFoundException;
+import com.muizz.sajooq.resource.ResourceQuery;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

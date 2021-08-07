@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
     mixinStandardHelpOptions = true, 
     version = "SAJOOQ Cli 0.1",
     description = "A CLI with a set of commands for managing entities lifecycle using Hibernate, Liquibase, and JOOQ")
-class Sjooq implements Callable<Integer> {
+class Sajooq implements Callable<Integer> {
 
     @Parameters(
         index = "0",

@@ -1,4 +1,4 @@
-package com.muizz.spring.jooq.utils.exceptions;
+package com.muizz.sajooq.exceptions;
 
 public class InvalidOperationException extends RuntimeException {
 
