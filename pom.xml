@@ -45,7 +45,7 @@
       <spring.boot.version>2.5.2</spring.boot.version>
 
       <jooq.version>3.15.1</jooq.version>
-      
+
       <liquibase.version>4.4.2</liquibase.version>
       <liquibase-maven.version>4.4.2</liquibase-maven.version>
 		<liquibase-hibernate5.version>4.4.2</liquibase-hibernate5.version>
@@ -54,9 +54,9 @@
 		<javassist.version>3.28.0-GA</javassist.version>
 		<jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
 
-      <app.db>${DB_NAME}</app.db>
-		<app.dbuser>${DB_USER}</app.dbuser>
-		<app.dbpassword>${DB_PASSWORD}</app.dbpassword>
+      <db.name>${DB_NAME}</db.name>
+		<db.user>${DB_USER}</db.user>
+		<db.password>${DB_PASSWORD}</db.password>
    </properties>
 
 
