@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
     mixinStandardHelpOptions = true, 
     version = "SAJOOQ Cli 0.1",
     description = "A CLI with a set of commands for managing entities lifecycle using Hibernate, Liquibase, and JOOQ")
-class Sajooq implements Callable<Integer> {
+class SajooqCli implements Callable<Integer> {
 
     @Parameters(
         index = "0",
@@ -50,7 +50,7 @@ class Sajooq implements Callable<Integer> {
     @Option(
         names = {"-n", "--db-name"},
         description = "Database name",
-        required = true
+        required = false
     )
     private String dbName;
 
@@ -58,7 +58,7 @@ class Sajooq implements Callable<Integer> {
     @Option(
         names = {"-u", "--db-user"},
         description = "Database user",
-        required = true
+        required = false
     )
     private String dbUser;
 
@@ -66,7 +66,7 @@ class Sajooq implements Callable<Integer> {
     @Option(
         names = {"-p", "--db-password"},
         description = "Database user's password",
-        required = true
+        required = false
     )
     private String dbPassword;
 
@@ -123,7 +123,7 @@ class Sajooq implements Callable<Integer> {
     private boolean areProcessesValid() {
 
         // Validate database credentials
-        if (!areDbCredentialsValid()) return false;
+        // if (!areDbCredentialsValid()) return false;
 
         // Validate operands
         if ((!isChangelog) && (!isEntity) && (!isDatabase)) {
@@ -214,16 +214,7 @@ class Sajooq implements Callable<Integer> {
      * @throws Exception
      */
     private void generateChangelogFromDb() throws Exception {
-
-        var command = String.format(
-            "mvn liquibase:generateChangeLog "
-            + "-DDB_NAME=%n "
-            + "-DDB_USER=%u "
-            + "-DDB_PASSWORD=%p", 
-            dbName, dbUser, dbPassword
-        );
-
-        RunCommand(command);
+        RunCommand("mvn liquibase:generateChangeLog");
     }
 
 
@@ -232,16 +223,7 @@ class Sajooq implements Callable<Integer> {
      * @throws Exception
      */
     private void generateEntityfromChangelog() throws Exception {
-
-        var command = String.format(
-            "mvn org.jooq:jooq-codegen-maven:3.15.1:generate@generate-entity "
-            + "-DDB_NAME=%n "
-            + "-DDB_USER=%u "
-            + "-DDB_PASSWORD=%p", 
-            dbName, dbUser, dbPassword
-        );
-
-        RunCommand(command);
+        RunCommand("mvn org.jooq:jooq-codegen-maven:3.15.1:generate@generate-entity");
     }
 
 
@@ -264,7 +246,7 @@ class Sajooq implements Callable<Integer> {
      * @throws Exception
      */
     private void updateDatabaseFromChangelog() throws Exception {
-        RunCommand("");
+        RunCommand("mvn liquibase:update");
     }
 
 
