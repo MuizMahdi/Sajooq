@@ -58,7 +58,7 @@ implements AccountRepository {
 @Autowired private AccountRepository accountRepository;
 
 @Override
-public Mono<Account> create(Account accountToCreate) {
+public Mono<ApiResponse> create(Account accountToCreate) {
 
     // Insert Account
     return accountRepository.insert(accountToCreate, Accounts.ACCOUNTS).flatMap(account -> {
