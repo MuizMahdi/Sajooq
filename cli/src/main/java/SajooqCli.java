@@ -76,7 +76,7 @@ class SajooqCli implements Callable<Integer> {
      * @param args
      */
     public static void main(String... args) {
-        int exitCode = new CommandLine(new Sjooq()).execute(args);
+        int exitCode = new CommandLine(new SajooqCli()).execute(args);
         System.exit(exitCode);
     }
 
@@ -165,7 +165,6 @@ class SajooqCli implements Callable<Integer> {
      * @return
      */
     private boolean areDbCredentialsValid() {
-
         var isDbNameValid = (dbName != null && !dbName.trim().isEmpty());
         var isDbUserValid = (dbUser != null && !dbUser.trim().isEmpty());
         var isDbPassValid = (dbPassword != null && !dbPassword.trim().isEmpty());
@@ -175,6 +174,7 @@ class SajooqCli implements Callable<Integer> {
             return false;
         }
 
+        return true;
     }
 
 
