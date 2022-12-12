@@ -10,7 +10,7 @@ import com.muizz.sajooq.resource.ResourceQuery;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface ResourceRepository<R extends BaseEntity, Y extends UpdatableRecord<Y>, T extends Table<Y>> {
+public interface ReactiveResourceRepository<R extends BaseEntity, Y extends UpdatableRecord<Y>, T extends Table<Y>> {
     public Mono<R> insert(R entity, Table<Y> entityTable);
     public Mono<R> findById(Long id, Table<Y> entityTable);
     public Mono<R> findFirstByField(TableField<Y, ?> field, String fieldValue);

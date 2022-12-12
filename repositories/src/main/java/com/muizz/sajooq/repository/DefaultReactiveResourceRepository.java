@@ -24,14 +24,14 @@ import reactor.core.publisher.Mono;
 
 @Transactional
 @SuppressWarnings("unchecked")
-public abstract class DefaultResourceRepository<R extends BaseEntity, Y extends UpdatableRecord<Y>, T extends Table<Y>>
-implements ResourceRepository<R, Y, T> {
+public abstract class DefaultReactiveResourceRepository<R extends BaseEntity, Y extends UpdatableRecord<Y>, T extends Table<Y>>
+implements ReactiveResourceRepository<R, Y, T> {
 
 
     @Autowired private DSLContext db;
     private Class<R> entityType;
 
-    public DefaultResourceRepository() {
+    public DefaultReactiveResourceRepository() {
         initializeEntityType();
     }
 
