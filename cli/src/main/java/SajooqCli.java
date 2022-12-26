@@ -1,6 +1,7 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 //DEPS info.picocli:picocli:4.5.0
 
+import org.apache.commons.lang3.StringUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -23,13 +24,11 @@ class SajooqCli implements Callable<Integer> {
     )
     private String operand;
 
-
     @Parameters(
         index = "1",
-        description = "The process that will be executed on the operand, e.g. add or update"
+        description = "The process that will be executed on the operand, e.g. generate or update"
     )
     private String operation;
-
 
     @Option(
         names = {"-c", "--changelog"},
@@ -38,14 +37,12 @@ class SajooqCli implements Callable<Integer> {
     )
     private String changelog;
 
-
     @Option(
         names = {"-e", "--entity"},
         description = "Name of the entity",
         required = false
     )
     private String entity;
-
 
     @Option(
         names = {"-n", "--db-name"},
@@ -54,14 +51,12 @@ class SajooqCli implements Callable<Integer> {
     )
     private String dbName;
 
-
     @Option(
         names = {"-u", "--db-user"},
         description = "Database user",
         required = false
     )
     private String dbUser;
-
 
     @Option(
         names = {"-p", "--db-password"},
@@ -70,19 +65,15 @@ class SajooqCli implements Callable<Integer> {
     )
     private String dbPassword;
 
+    private boolean isChangelog, isEntity, isDatabase, isGenerating, isUpdating;
 
     /** 
      * Initializes CLI
      * @param args
      */
     public static void main(String... args) {
-        int exitCode = new CommandLine(new SajooqCli()).execute(args);
-        System.exit(exitCode);
+        System.exit(new CommandLine(new SajooqCli()).execute(args));
     }
-
-
-    private boolean isChangelog, isEntity, isDatabase, isAdding, isUpdating;
-
 
     /** 
      * Runs CLI command
@@ -91,7 +82,6 @@ class SajooqCli implements Callable<Integer> {
      */
     @Override
     public Integer call() throws Exception {
-
         // Initialize
         initializeProcesses();
 
@@ -103,89 +93,68 @@ class SajooqCli implements Callable<Integer> {
 
         // End
         return 0;
-
     }
-
 
     private void initializeProcesses() {
         isChangelog = operand.equals("changelog");
         isEntity = operand.equals("entity");
         isDatabase = operand.equals("database");
-        isAdding = operation.equals("add");
+        isGenerating = operation.equals("generate");
         isUpdating = operation.equals("update");
     }
-
 
     /** 
      * Checks if all CLI operands and their operations are valid for execution
      * @return boolean
      */
     private boolean areProcessesValid() {
-
-        // Validate database credentials
-        // if (!areDbCredentialsValid()) return false;
-
         // Validate operands
         if ((!isChangelog) && (!isEntity) && (!isDatabase)) {
-            printlnAnsi("@|red Invalid operand, only changelog, entity, and database operands allowed|@");
+            printError("Invalid operand, only 'changelog', 'entity', and 'database' operands allowed");
             return false;
         }
 
         // Validate operations
-        if (!isAdding && !isUpdating) {
-            printlnAnsi("@|red Invalid operation, only add, and update operations allowed|@");
-            return false;
-        }
-
-        // Validate changelog operations
-        if (isChangelog && !isAdding) {
-            printlnAnsi("@|red Invalid operation, only add operation is supported for changelog|@");
+        if (!isGenerating && !isUpdating) {
+            printError("Invalid operation, only 'generate', and 'update' operations allowed");
             return false;
         }
 
         // Validate entity operations
-        if (isEntity && !isUpdating) {
-            printlnAnsi("@|red Invalid operation, only update operation is supported for entity|@");
+        if (isEntity && !isGenerating) {
+            printError("Invalid operation, only 'generate' operation is supported for entity");
             return false;
         }
 
         // Validate database operations
         if (isDatabase && !isUpdating) {
-            printlnAnsi("@|red Invalid operation, only update operation is supported for database|@");
+            printError("Invalid operation, only 'update' operation is supported for database");
             return false;
         }
 
         return true;
-
     }
-
 
     /**
      * Checks if Database CLI options are entered and valid for execution
      * @return
      */
     private boolean areDbCredentialsValid() {
-        var isDbNameValid = (dbName != null && !dbName.trim().isEmpty());
-        var isDbUserValid = (dbUser != null && !dbUser.trim().isEmpty());
-        var isDbPassValid = (dbPassword != null && !dbPassword.trim().isEmpty());
-
-        if ((!isDbNameValid) && (!isDbUserValid) && (!isDbPassValid)) {
-            printlnAnsi("@|red Invalid database credentials, please enter database name, user, and password|@");
+        if (StringUtils.isAnyEmpty(dbName, dbUser, dbPassword)) {
+            printError("Invalid database credentials, please enter database name, user, and password");
             return false;
         }
 
         return true;
     }
 
-
     /** 
      * Runs a process according to the entered operands and operations
      * @throws Exception
      */
     private void runProccesses() throws Exception {
-
         // Check for changelog generation from database
-        if (isChangelog && changelog != null && !changelog.isEmpty()) {
+        if (isChangelog && isGenerating && areDbCredentialsValid()) {
             generateChangelogFromDb();
         }
 
@@ -205,9 +174,7 @@ class SajooqCli implements Callable<Integer> {
         }
 
         RunCommand("mvn clean install");
-
     }
-
 
     /**
      * Generates changelog from main database
@@ -217,7 +184,6 @@ class SajooqCli implements Callable<Integer> {
         RunCommand("mvn liquibase:generateChangeLog");
     }
 
-
     /**
      * Generates and updates entities from changelog
      * @throws Exception
@@ -225,7 +191,6 @@ class SajooqCli implements Callable<Integer> {
     private void generateEntityfromChangelog() throws Exception {
         RunCommand("mvn org.jooq:jooq-codegen-maven:3.15.1:generate@generate-entity");
     }
-
 
     /**
      * Generates changelog from JPA entities, this is done
@@ -240,7 +205,6 @@ class SajooqCli implements Callable<Integer> {
         RunCommand("");
     }
 
-
     /**
      * Updates the main DB using liquibase changelogs
      * @throws Exception
@@ -249,8 +213,7 @@ class SajooqCli implements Callable<Integer> {
         RunCommand("mvn liquibase:update");
     }
 
-
-    /** 
+    /**
      * @param command
      * @throws Exception
      */
@@ -273,12 +236,11 @@ class SajooqCli implements Callable<Integer> {
 
     }
 
-    
-    /** 
-     * @param msg
+    /**
+     * Prints error message
+     * @param message message to be printed
      */
-    private void printlnAnsi(String msg) {
-        System.out.println(CommandLine.Help.Ansi.AUTO.string(msg));
+    private void printError(String message) {
+        System.out.println(CommandLine.Help.Ansi.AUTO.string("@|red " + message + "|@"));
     }
-
 }

@@ -26,7 +26,7 @@
 
    <developers>
       <developer>
-         <name>Muizz M. Mahdy</name>
+         <name>Muiz Mahdi</name>
          <email>muizzmahdy@gmail.com</email>
       </developer>
    </developers>
@@ -54,6 +54,8 @@
       <validation-api.version>2.0.1.Final</validation-api.version>
       <javassist.version>3.28.0-GA</javassist.version>
       <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
+      <maven.compiler.target>17</maven.compiler.target>
+      <maven.compiler.source>17</maven.compiler.source>
    </properties>
 
    <dependencyManagement>
@@ -88,6 +90,12 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-starter-jooq</artifactId>
          <version>${spring.boot.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-lang3</artifactId>
+         <version>3.12.0</version>
       </dependency>
    </dependencies>
 
