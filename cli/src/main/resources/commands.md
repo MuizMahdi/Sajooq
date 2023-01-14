@@ -1,5 +1,13 @@
-### sajooq --help
-Displays list of commands and their descriptions
+## Display the list of commands and their descriptions
+```bash
+sajooq --help
+```
+
+## Setup Project
+Adds resources folder with liquibase.properties in it
+```bash
+sajooq init
+```
 
 ## Generate Changelog from existing database:
 ```bash
