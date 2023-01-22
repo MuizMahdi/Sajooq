@@ -1,15 +1,17 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 //DEPS info.picocli:picocli:4.5.0
 
+import constants.ErrorMessages;
+import constants.Operations;
 import org.apache.commons.lang3.StringUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+import utilities.ExternalCommandUtils;
+import utilities.MessageUtils;
 
-import java.io.*;
 import java.util.concurrent.Callable;
-
 
 @Command(
     name = "sajooq", 
@@ -99,8 +101,8 @@ class SajooqCli implements Callable<Integer> {
         isChangelog = operand.equals("changelog");
         isEntity = operand.equals("entity");
         isDatabase = operand.equals("database");
-        isGenerating = operation.equals("generate");
-        isUpdating = operation.equals("update");
+        isGenerating = operation.equals(Operations.GENERATE.toString());
+        isUpdating = operation.equals(Operations.UPDATE.toString());
     }
 
     /** 
@@ -110,25 +112,25 @@ class SajooqCli implements Callable<Integer> {
     private boolean areProcessesValid() {
         // Validate operands
         if ((!isChangelog) && (!isEntity) && (!isDatabase)) {
-            printError("Invalid operand, only 'changelog', 'entity', and 'database' operands allowed");
+            printError(ErrorMessages.INVALID_OPERAND);
             return false;
         }
 
         // Validate operations
         if (!isGenerating && !isUpdating) {
-            printError("Invalid operation, only 'generate', and 'update' operations allowed");
+            printError(ErrorMessages.INVALID_OPERATION);
             return false;
         }
 
         // Validate entity operations
         if (isEntity && !isGenerating) {
-            printError("Invalid operation, only 'generate' operation is supported for entity");
+            printError(ErrorMessages.INVALID_ENTITY_OPERATION);
             return false;
         }
 
         // Validate database operations
         if (isDatabase && !isUpdating) {
-            printError("Invalid operation, only 'update' operation is supported for database");
+            printError(ErrorMessages.INVALID_DB_OPERATION);
             return false;
         }
 
@@ -141,7 +143,7 @@ class SajooqCli implements Callable<Integer> {
      */
     private boolean areDbCredentialsValid() {
         if (StringUtils.isAnyEmpty(dbName, dbUser, dbPassword)) {
-            printError("Invalid database credentials, please enter database name, user, and password");
+            printError(ErrorMessages.INVALID_DB_CREDENTIALS);
             return false;
         }
 
@@ -173,7 +175,7 @@ class SajooqCli implements Callable<Integer> {
             updateDatabaseFromChangelog();
         }
 
-        RunCommand("mvn clean install");
+        ExternalCommandUtils.execute("mvn clean install");
     }
 
     /**
@@ -181,7 +183,7 @@ class SajooqCli implements Callable<Integer> {
      * @throws Exception
      */
     private void generateChangelogFromDb() throws Exception {
-        RunCommand("mvn liquibase:generateChangeLog");
+        ExternalCommandUtils.execute("mvn liquibase:generateChangeLog");
     }
 
     /**
@@ -189,7 +191,7 @@ class SajooqCli implements Callable<Integer> {
      * @throws Exception
      */
     private void generateEntityfromChangelog() throws Exception {
-        RunCommand("mvn org.jooq:jooq-codegen-maven:3.15.1:generate@generate-entity");
+        ExternalCommandUtils.execute("mvn org.jooq:jooq-codegen-maven:3.15.1:generate@generate-entity");
     }
 
     /**
@@ -202,7 +204,7 @@ class SajooqCli implements Callable<Integer> {
      * @throws Exception
      */
     private void generateChangelogFromEntity() throws Exception {
-        RunCommand("");
+        ExternalCommandUtils.execute("");
     }
 
     /**
@@ -210,30 +212,7 @@ class SajooqCli implements Callable<Integer> {
      * @throws Exception
      */
     private void updateDatabaseFromChangelog() throws Exception {
-        RunCommand("mvn liquibase:update");
-    }
-
-    /**
-     * @param command
-     * @throws Exception
-     */
-    private void RunCommand(String command) throws Exception {
-
-        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
-
-        final Process p = Runtime.getRuntime().exec(command);
-
-        new Thread(new Runnable(){
-            public void run() {
-                BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line = null;
-                try { while ((line = input.readLine()) != null) System.out.println(line); } 
-                catch(IOException ex) { ex.printStackTrace(); }
-            } 
-        }).start();
-
-        p.waitFor();
-
+        ExternalCommandUtils.execute("mvn liquibase:update");
     }
 
     /**
@@ -241,6 +220,6 @@ class SajooqCli implements Callable<Integer> {
      * @param message message to be printed
      */
     private void printError(String message) {
-        System.out.println(CommandLine.Help.Ansi.AUTO.string("@|red " + message + "|@"));
+        System.out.println(MessageUtils.getErrorMessage(message));
     }
 }
