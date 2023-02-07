@@ -2,6 +2,7 @@
 //DEPS info.picocli:picocli:4.5.0
 
 import constants.ErrorMessages;
+import constants.ExitCodes;
 import constants.Operations;
 import org.apache.commons.lang3.StringUtils;
 import picocli.CommandLine;
@@ -88,13 +89,13 @@ class SajooqCli implements Callable<Integer> {
         initializeProcesses();
 
         // Validate
-        if (!areProcessesValid()) return 1;
+        if (!areProcessesValid()) return ExitCodes.WITH_ERRORS.getCode();
 
         // Run
         runProccesses();
 
         // End
-        return 0;
+        return ExitCodes.WITHOUT_ERRORS.getCode();
     }
 
     private void initializeProcesses() {

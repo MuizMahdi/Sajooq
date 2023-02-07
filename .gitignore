@@ -16,6 +16,7 @@
 # Other
 settings.xml
 target/
+*attach_pid*
 
 # IDE
 .idea/
