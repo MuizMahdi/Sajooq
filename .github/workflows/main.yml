@@ -1,7 +1,7 @@
 name: Sajooq CI
 on:
   pull_request:
-    branches: [feature/native-executable] #TODO: Replace with [$default_branch]
+    branches: [feature/github-actions-workflow] #TODO: Replace with [$default_branch]
 
 jobs:
   cli-build-linux:
