@@ -9,6 +9,7 @@ public final class ExternalCommandUtils {
      * Executes an external command
      * @param command
      *          The command to be executed
+     *  @throws IOException when there's an error while reading the command
      */
     public static void execute(String command) throws IOException, InterruptedException {
         final Process p = Runtime.getRuntime().exec(command);

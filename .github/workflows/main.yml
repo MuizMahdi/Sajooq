@@ -2,6 +2,8 @@ name: Sajooq CI
 on:
   push:
     branches: [feature/github-actions-workflow] #TODO: Replace with [$default_branch]
+    paths:
+      - 'cli/**'
 
 jobs:
   cli-build-linux:
@@ -23,6 +25,4 @@ jobs:
       - name: Build native executable
         run: |
           mvn -Pnative package
-#      - name: Publish executable to artifactory
-#        run: |
-    if: ${{ github.event.head_commit.modified_files contains 'cli/' }}
+#    if: ${{ github.event.head_commit.modified_files contains 'cli/' }}
