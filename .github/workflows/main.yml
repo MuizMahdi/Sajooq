@@ -1,0 +1,28 @@
+name: Sajooq CI
+on:
+  pull_request:
+    branches: [feature/native-executable] #TODO: Replace with [$default_branch]
+
+jobs:
+  cli-build-linux:
+    name: build and publish linux native executable for Sajooq CLI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log environment
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+          native-image --version
+      - name: Build native executable
+        run: |
+          mvn -Pnative package
+#      - name: Publish executable to artifactory
+#        run: |
+    if: ${{ github.event.head_commit.modified_files contains 'cli/' }}
