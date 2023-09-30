@@ -1,6 +1,6 @@
 name: Sajooq CI
 on:
-  pull_request:
+  push:
     branches: [feature/github-actions-workflow] #TODO: Replace with [$default_branch]
 
 jobs:
