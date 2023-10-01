@@ -6,11 +6,31 @@
    <groupId>io.github.muizmahdi</groupId>
    <artifactId>sajooq</artifactId>
    <name>${project.groupId}:${project.artifactId}</name>
-   <description>A library and a cli for simplifying development using Spring Webflux and JOOQ</description>
-   <version>1.0.4</version>
+   <description>A library and a cli for simplifying development using Spring and JOOQ</description>
+   <version>1.1.0</version>
    <url>https://github.com/MuizMahdi/sajooq</url>
-   <packaging>jar</packaging>
+   <packaging>pom</packaging>
 
+   <properties>
+      <spring.boot.version>3.1.4</spring.boot.version>
+      <jooq.version>3.18.0</jooq.version>
+      <liquibase.version>4.23.2</liquibase.version>
+      <liquibase-maven.version>4.23.2</liquibase-maven.version>
+      <liquibase-hibernate5.version>4.23.2</liquibase-hibernate5.version>
+      <hibernate.verion>5.4.6.Final</hibernate.verion>
+      <validation-api.version>2.0.1.Final</validation-api.version>
+      <javassist.version>3.28.0-GA</javassist.version>
+      <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
+      <maven.compiler.target>17</maven.compiler.target>
+      <maven.compiler.source>17</maven.compiler.source>
+      <!-- TODO: Remove once Javadoc documentation is complete, doclint is preventing build completion -->
+      <doclint>none</doclint>
+   </properties>
+
+   <modules>
+      <module>cli</module>
+      <module>repositories</module>
+   </modules>
 
    <licenses>
       <license>
@@ -20,14 +40,19 @@
       </license>
    </licenses>
 
-
    <developers>
       <developer>
-         <name>Muizz Mahdy</name>
-         <email>moezmahdy@gmail.com</email>
+         <name>Muiz Mahdi</name>
+         <email>muizzmahdy@gmail.com</email>
       </developer>
    </developers>
 
+   <parent>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-parent</artifactId>
+      <version>3.0.2</version>
+      <relativePath/>
+   </parent>
 
    <scm>
       <connection>scm:git:git@github.com:MuizMahdi/sajooq.git</connection>
@@ -35,57 +60,31 @@
       <url>https://github.com/MuizMahdi/sajooq/tree/main</url>
    </scm>
 
+   <dependencyManagement>
+      <dependencies>
 
-   <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-      <maven.compiler.release>11</maven.compiler.release>
-      <maven.compiler.source>11</maven.compiler.source>
-      <maven.compiler.target>11</maven.compiler.target>
-      <spring.boot.version>2.5.2</spring.boot.version>
-      <jooq.version>3.15.1</jooq.version>
-      <liquibase.version>4.4.2</liquibase.version>
-      <liquibase-maven.version>4.4.2</liquibase-maven.version>
-		<liquibase-hibernate5.version>4.4.2</liquibase-hibernate5.version>
-		<hibernate.verion>5.4.6.Final</hibernate.verion>
-		<validation-api.version>2.0.1.Final</validation-api.version>
-		<javassist.version>3.28.0-GA</javassist.version>
-		<jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
-      <db.name>${DB_NAME}</db.name>
-		<db.user>${DB_USER}</db.user>
-		<db.password>${DB_PASSWORD}</db.password>
-   </properties>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>${project.artifactId}-cli</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>repositories</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+      </dependencies>
+   </dependencyManagement>
 
    <dependencies>
-
       <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-webflux</artifactId>
-         <version>${spring.boot.version}</version>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-lang3</artifactId>
+         <version>3.12.0</version>
       </dependency>
-
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-data-r2dbc</artifactId>
-         <version>${spring.boot.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-jooq</artifactId>
-         <version>${spring.boot.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.11</version>
-         <scope>test</scope>
-      </dependency>
-
    </dependencies>
-
 
    <distributionManagement>
       <snapshotRepository>
@@ -98,15 +97,12 @@
       </repository>
    </distributionManagement>
 
-
    <build>
       <plugins>
-
-         <!-- #region Publish -->
-
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
+            <version>3.2.1</version>
             <executions>
                <execution>
                   <id>attach-sources</id>
@@ -120,6 +116,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.4.1</version>
             <executions>
                <execution>
                   <id>attach-javadocs</id>
@@ -162,12 +159,8 @@
                <autoReleaseAfterClose>true</autoReleaseAfterClose>
             </configuration>
          </plugin>
-         
-         <!-- #endregion -->
-
       </plugins>
    </build>
-
 
    <profiles>
       <profile>
@@ -177,7 +170,7 @@
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-gpg-plugin</artifactId>
-                  <version>1.6</version>
+                  <version>3.0.1</version>
                   <executions>
                      <execution>
                         <id>sign-artifacts</id>
@@ -186,8 +179,8 @@
                            <goal>sign</goal>
                         </goals>
                         <configuration>
-                           <!-- Prevent gpg from using pinentry programs. Fixes: gpg: signing 
-                              failed: Inappropriate ioctl for device -->
+                           <!-- Prevent gpg from using pinentry programs.
+                           Fixes: gpg: signing failed: Inappropriate ioctl for device -->
                            <gpgArguments>
                               <arg>--pinentry-mode</arg>
                               <arg>loopback</arg>

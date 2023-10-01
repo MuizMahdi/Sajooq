@@ -1,0 +1,27 @@
+name: Sajooq CI
+on:
+  push:
+#    branches: [feature/github-actions-workflow] # TODO: Replace with [$default_branch]
+    paths:
+      - 'cli/**'
+
+jobs:
+  cli-build-linux: # TODO: add macOS and Windows jobs - add JFrog upload of the built executable
+    name: build and publish linux native executable for Sajooq CLI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log environment
+        run: |
+          echo "GRAALVM_HOME: $GRAALVM_HOME"
+          echo "JAVA_HOME: $JAVA_HOME"
+          java --version
+          native-image --version
+      - name: Build native executable
+        run: |
+          mvn -Pnative package
