@@ -1,12 +1,12 @@
 name: Sajooq CI
 on:
   push:
-    branches: [feature/github-actions-workflow] #TODO: Replace with [$default_branch]
+#    branches: [feature/github-actions-workflow] # TODO: Replace with [$default_branch]
     paths:
       - 'cli/**'
 
 jobs:
-  cli-build-linux:
+  cli-build-linux: # TODO: add macOS and Windows jobs - add JFrog upload of the built executable
     name: build and publish linux native executable for Sajooq CLI
     runs-on: ubuntu-latest
     steps:
@@ -25,4 +25,3 @@ jobs:
       - name: Build native executable
         run: |
           mvn -Pnative package
-#    if: ${{ github.event.head_commit.modified_files contains 'cli/' }}
